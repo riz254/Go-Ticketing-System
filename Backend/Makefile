@@ -1,9 +1,8 @@
-# Default target
-start: build
-	@echo "Starting the Go application..."
-	@./bin/main || echo "Failed to start the application"
+start: 
+	@docker compose up --build
 
-# Build target
-build:
-	@echo "Building the Go application..."
-	@go build -o ./bin/main ./cmd/api/main.go || echo "Go build failed"
+
+stop:
+	@docker-compose rm -v --force --stop
+	@docker rmi ticket-booking	
+
