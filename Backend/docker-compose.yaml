@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  app:
+    tty: true #keep the container running
+    restart: always
+    image: ticket-booking
+    container_name: ticket-booking
+    build: .
+    ports:
+      - 3000:3000  #Maps port 3000 on your local machine to port 3000 in the container
+    env_file:
+      - .env
+    networks:
+      - application
+    depends_on:
+      db:
+        condition: service_healthy  #ensures that app only starts once db is healthy
+    volumes:
+      - .:/src/app  #Mounts the current directory (.) into the /src/app directory in the container. This enables live reloading since code changes on your local machine will reflect in the container without needing a rebuild.
+
+    command: air -c .air.toml
+
+
+  db: 
+    image: postgres:alpine
+    container_name: ticket-booking-db
+    environment:
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-db:/var/lib/postgresql/data   #Persists PostgreSQL data on a Docker volume named postgres-db, ensuring that database data is not lost when the container stops or restarts./var/lib/postgresql/data  where PostgreSQL stores its data in the container.
+    networks:
+      - application   #Attaches the db service to the application network, allowing it to communicate with the app service on the same network.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]  #checks if PostgreSQL is accepting connections for the specified user.
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  application:
+
+volumes:
+  postgres-db:
