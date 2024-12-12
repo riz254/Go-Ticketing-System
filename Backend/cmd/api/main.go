@@ -15,6 +15,10 @@ func main() {
 
 	envConfig := config.NewEnvConfig()
 	db := db.Init(envConfig, db.DBMigrator)
+	if db == nil {
+		fmt.Println("Failed to initialize database connection.")
+		return
+	}
 
 	app := fiber.New(fiber.Config{
 		AppName:      "TicketBooking",
