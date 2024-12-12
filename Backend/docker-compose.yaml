@@ -18,6 +18,7 @@ services:
         condition: service_healthy  #ensures that app only starts once db is healthy
     volumes:
       - .:/src/app  #Mounts the current directory (.) into the /src/app directory in the container. This enables live reloading since code changes on your local machine will reflect in the container without needing a rebuild.
+      - go-mod-cache:/go/pkg/mod
 
     command: air -c .air.toml
 
@@ -34,6 +35,8 @@ services:
       - 5432:5432
     volumes:
       - postgres-db:/var/lib/postgresql/data   #Persists PostgreSQL data on a Docker volume named postgres-db, ensuring that database data is not lost when the container stops or restarts./var/lib/postgresql/data  where PostgreSQL stores its data in the container.
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Run a custom SQL script during DB initialization
+
     networks:
       - application   #Attaches the db service to the application network, allowing it to communicate with the app service on the same network.
     healthcheck:
@@ -47,3 +50,4 @@ networks:
 
 volumes:
   postgres-db:
+  go-mod-cache:

@@ -13,7 +13,7 @@ RUN go install github.com/air-verse/air@latest
 
 
 COPY go.mod go.sum ./
-#go.sum contains checksums for each dependency, ensuring that the exact versions used are verified against these checksums to avoid tampering.
+# #go.sum contains checksums for each dependency, ensuring that the exact versions used are verified against these checksums to avoid tampering.
 RUN go mod tidy   
 
 # Copy the rest of the source code
