@@ -18,7 +18,6 @@ type EventHandler struct {
 /*methods can be associated with types (like structs) using method receivers.
 Here, each method (e.g., GetMany, GetOne, CreateOne) is tied to EventHandler using a pointer receiver (h *EventHandler).
 This allows each method to access EventHandler fields and methods directly.*/
-
 func (h *EventHandler) GetMany(ctx *fiber.Ctx) error {
 	context, cancel := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
 	//creates a context with a timeout of 5 seconds.context.Background() provides a base context that has no timeout, cancellation, or values.

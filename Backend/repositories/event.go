@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"log"
 
 	"github.com/riz254/Go-Ticketing-System.git/models"
@@ -55,20 +57,20 @@ func (r *EventRepository) CreateOne(ctx context.Context, event *models.Event) (*
 func (r *EventRepository) UpdateOne(ctx context.Context, eventId uint, updateData map[string]interface{}) (*models.Event, error) {
 	event := &models.Event{}
 
-	// Update the event with the provided ID
-	updateRes := r.db.Model(event).Where("id = ?", eventId).Updates(updateData)
-
-	if updateRes.Error != nil {
-		return nil, updateRes.Error
+	// Find the event to ensure it exists
+	if err := r.db.Where("id = ?", eventId).First(event).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("event with ID %d not found", eventId)
+		}
+		return nil, err
 	}
 
-	// Fetch the updated event
-	getRes := r.db.Where("id = ?", eventId).First(&event)
-
-	if getRes.Error != nil {
-		return nil, getRes.Error
+	// Perform the update
+	if err := r.db.Model(event).Updates(updateData).Error; err != nil {
+		return nil, err
 	}
 
+	// Return the updated event
 	return event, nil
 }
 

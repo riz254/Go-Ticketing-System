@@ -21,13 +21,13 @@ func Init(config *config.EnvConfig, DBMigrator func(db *gorm.DB) error) *gorm.DB
 	})
 
 	if err != nil {
-		log.Fatalf("unable to connect to the database: %v", err)
+		log.Fatalf("unable to connect to the database: %e", err)
 	}
 
 	log.Info("connected to the database!!")
 
 	if err := DBMigrator(db); err != nil {
-		log.Fatalf("unable to Migrate tables: %v", err)
+		log.Fatalf("unable to Migrate tables: %e", err)
 	}
 
 	return db

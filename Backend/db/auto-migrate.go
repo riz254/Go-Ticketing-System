@@ -6,5 +6,17 @@ import (
 )
 
 func DBMigrator(db *gorm.DB) error {
-	return db.AutoMigrate(&models.Event{})
+	// Drop tables if they exist
+	err := db.Migrator().DropTable(&models.Event{}, &models.Ticket{})
+	if err != nil {
+		return err
+	}
+
+	// Recreate tables
+	err = db.AutoMigrate(&models.Event{}, &models.Ticket{})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

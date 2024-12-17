@@ -6,7 +6,7 @@ import (
 )
 
 type Event struct {
-	ID        uint      `json:"id" gorm:"primaryKey;autoIncrement"` // Ensure autoIncrement is set
+	ID        uint      `json:"id" gorm:"primaryKey"` // Ensure autoIncrement is set
 	Name      string    `json:"name"`
 	Location  string    `json:"location"`
 	Date      time.Time `json:"date"`
