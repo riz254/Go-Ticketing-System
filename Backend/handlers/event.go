@@ -99,6 +99,7 @@ func (h *EventHandler) CreateOne(ctx *fiber.Ctx) error {
 
 func (h *EventHandler) UpdateOne(ctx *fiber.Ctx) error {
 	eventId, _ := strconv.Atoi(ctx.Params("eventId"))
+
 	updateData := make(map[string]interface{})
 	//allows you to specify only the fields to be updated.
 
@@ -123,9 +124,9 @@ func (h *EventHandler) UpdateOne(ctx *fiber.Ctx) error {
 		})
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(&fiber.Map{
+	return ctx.Status(fiber.StatusOK).JSON(&fiber.Map{
 		"status":  "success",
-		"message": "Event Created",
+		"message": "Event Updated",
 		"data":    event,
 	})
 
