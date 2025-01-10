@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
@@ -19,18 +20,18 @@ type EnvConfig struct {
 
 // NewEnvConfig loads the environment variables and returns the EnvConfig struct
 func NewEnvConfig() *EnvConfig {
-	// Load .env file into the environment
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Unable to load the .env file: %v", err) // Log but don't crash
+	// Only load .env file if we're running locally, not in Render
+	if os.Getenv("RENDER") == "" { // Check if we are in Render
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatalf("Unable to load the .env file: %v", err)
+		}
 	}
 
 	// Parse environment variables into the EnvConfig struct
 	config := &EnvConfig{}
-
 	if err := env.Parse(config); err != nil {
 		log.Fatalf("Unable to parse environment variables: %v", err)
 	}
-
 	return config
 }
