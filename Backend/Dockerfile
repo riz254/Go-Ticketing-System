@@ -1,23 +1,23 @@
-# Use an official Golang image for building
-FROM golang:1.23-alpine as builder
+# Use the official Golang image based on Alpine Linux for a lightweight container
+FROM golang:1.23-alpine3.19 as builder
 
-# Set the working directory
-WORKDIR /app
+# Set the working directory inside the container
+WORKDIR /src/app
 
-# Install necessary tools and dependencies
-RUN apk add --no-cache git
+# Install Air for live reloading (optional for local development)
+RUN go install github.com/air-verse/air@latest
 
-# Copy go.mod and go.sum files
+# Copy the Go module files and download dependencies separately to leverage Docker's caching
 COPY go.mod go.sum ./
 
-# Download dependencies
-RUN go mod download
+# Install dependencies
+RUN go mod tidy
 
-# Copy the rest of the source code
+# Copy the source code into the container
 COPY . .
 
-# Build the Go app
-RUN go build -o main .
+# Build the Go application from the 'cmd/api' directory
+RUN go build -o app ./cmd/api
 
 # Use a minimal base image for the final container
 FROM alpine:3.19
@@ -26,13 +26,10 @@ FROM alpine:3.19
 WORKDIR /root/
 
 # Copy the compiled binary from the builder stage
-COPY --from=builder /app/main .
+COPY --from=builder /src/app/app .
 
-# Copy the .env file (Optional: only for local testing)
-# COPY .env . 
-
-# Expose the port your app runs on
+# Expose the default port (Render will dynamically assign a port via the PORT environment variable)
 EXPOSE 3000
 
-# Command to run the application
-CMD ["./main"]
+# Command to run the application (Render will pass the $PORT automatically)
+CMD ["./app"]
