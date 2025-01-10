@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/riz254/Go-Ticketing-System.git/config"
 	"github.com/riz254/Go-Ticketing-System.git/db"
 	"github.com/riz254/Go-Ticketing-System.git/handlers"
@@ -13,6 +14,7 @@ import (
 )
 
 func main() {
+
 	fmt.Println("Starting the TicketBooking app...") // Log to check if the app starts
 
 	envConfig := config.NewEnvConfig()
@@ -27,6 +29,10 @@ func main() {
 		ServerHeader: "Fiber",
 	})
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*", // You can replace * with specific origins for security
+		AllowHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+	}))
 	// Repositories
 	eventRepository := repositories.NewEventRepository(db)
 	ticketRepository := repositories.NewTicketRepository(db)
