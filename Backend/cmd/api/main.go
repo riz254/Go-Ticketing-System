@@ -24,15 +24,18 @@ func main() {
 		return
 	}
 
+	// Create a new Fiber instance
 	app := fiber.New(fiber.Config{
 		AppName:      "TicketBooking",
 		ServerHeader: "Fiber",
 	})
 
+	// CORS
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*", // You can replace * with specific origins for security
 		AllowHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
 	}))
+
 	// Repositories
 	eventRepository := repositories.NewEventRepository(db)
 	ticketRepository := repositories.NewTicketRepository(db)
