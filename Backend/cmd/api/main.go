@@ -41,20 +41,27 @@ func main() {
 	ticketRepository := repositories.NewTicketRepository(db)
 	authRepository := repositories.NewAuthRepository(db)
 
-	// Service
+	// Services
 	authService := services.NewAuthService(authRepository)
 
 	// Routing
 	server := app.Group("/api")
+
+	// Auth routes
 	handlers.NewAuthHandler(server.Group("/auth"), authService)
 
+	// Public event routes
+	publicEventRoutes := server.Group("/event")
+	handlers.NewEventHandler(publicEventRoutes, eventRepository)
+
+	// Private routes
 	privateRoutes := server.Use(middlewares.AuthProtected(db))
 
-	// Handlers
-	handlers.NewEventHandler(privateRoutes.Group("/event"), eventRepository)
-	handlers.NewTicketHandler(privateRoutes.Group("/ticket"), ticketRepository)
+	// Private event routes
+	privateEventRoutes := privateRoutes.Group("/event")
+	handlers.NewTicketHandler(privateEventRoutes.Group("/ticket"), ticketRepository)
 
-	// Log and listen on port 3000
+	// Log and listen on port
 	fmt.Println("Listening on port 3000...")
 	if err := app.Listen(fmt.Sprintf(":" + envConfig.ServerPort)); err != nil {
 		fmt.Println("Error starting server:", err)
