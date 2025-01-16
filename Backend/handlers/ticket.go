@@ -22,10 +22,11 @@ func (h *TicketHandler) GetMany(ctx *fiber.Ctx) error {
 	defer cancel()
 	//cancel is a function that, when called, cancels the context and releases any associated resources. This is crucial for avoiding memory leaks.defer cancel():This ensures that cancel() is called after GetMany completes, releasing resources associated with the context.
 
-	userId := uint(ctx.Locals("userId").(float64))
+	// userId := uint(ctx.Locals("userId").(float64))
 
 	// Call repository to save the event
-	tickets, err := h.repository.GetMany(context, userId)
+	tickets, err := h.repository.GetMany(context) //when authenticating have it as
+	//  tickets, err := h.repository.GetMany(context, userId)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusBadGateway).JSON(&fiber.Map{
@@ -46,9 +47,9 @@ func (h *TicketHandler) GetOne(ctx *fiber.Ctx) error {
 	defer cancel()
 
 	ticketId, _ := strconv.Atoi(ctx.Params("ticketId"))
-	userId := uint(ctx.Locals("userId").(float64))
+	// userId := uint(ctx.Locals("userId").(float64))
 
-	ticket, err := h.repository.GetOne(context, userId, uint(ticketId))
+	ticket, err := h.repository.GetOne(context, uint(ticketId)) //authing => ticket, err := h.repository.GetOne(context, userId, uint(ticketId))
 
 	if err != nil {
 		return ctx.Status(fiber.StatusBadGateway).JSON(&fiber.Map{
@@ -60,7 +61,8 @@ func (h *TicketHandler) GetOne(ctx *fiber.Ctx) error {
 	//qrCode
 	var QrCode []byte
 	QrCode, err = qrcode.Encode(
-		fmt.Sprint("ticketId:%v", "ownerId:%v", ticketId, userId),
+		fmt.Sprintf("ticketId:%v", ticketId), //authing =>	fmt.Sprint("ticketId:%v", "ownerId:%v", ticketId, userId),
+
 		qrcode.Medium,
 		256,
 	)
@@ -86,7 +88,7 @@ func (h *TicketHandler) CreateOne(ctx *fiber.Ctx) error {
 	defer cancel()
 
 	ticket := &models.Ticket{}
-	userId := uint(ctx.Locals("userId").(float64))
+	// userId := uint(ctx.Locals("userId").(float64))
 
 	if err := ctx.BodyParser(ticket); err != nil {
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&fiber.Map{
@@ -96,7 +98,8 @@ func (h *TicketHandler) CreateOne(ctx *fiber.Ctx) error {
 		})
 	}
 
-	ticket, err := h.repository.CreateOne(context, userId, ticket)
+	ticket, err := h.repository.CreateOne(context, ticket)
+	// authing => 	ticket, err := h.repository.CreateOne(context, userId, ticket)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusBadGateway).JSON(&fiber.Map{
@@ -129,7 +132,8 @@ func (h *TicketHandler) ValidateOne(ctx *fiber.Ctx) error {
 	validateData := make(map[string]interface{})
 	validateData["entered"] = true
 
-	ticket, err := h.repository.UpdateOne(context, validateBody.OwnerId, validateBody.TicketID, validateData)
+	ticket, err := h.repository.UpdateOne(context, validateBody.TicketID, validateData)
+	//remember to get back owner id and have this line as => ticket, err := h.repository.UpdateOne(context, validateBody.OwnerId, validateBody.TicketID, validateData)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusBadGateway).JSON(&fiber.Map{

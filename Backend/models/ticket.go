@@ -16,13 +16,15 @@ type Ticket struct {
 }
 
 type TicketRepository interface {
-	GetMany(ctx context.Context, userId uint) ([]*Ticket, error)
-	GetOne(ctx context.Context, userId uint, ticketId uint) (*Ticket, error)
-	CreateOne(ctx context.Context, userId uint, ticket *Ticket) (*Ticket, error)
-	UpdateOne(ctx context.Context, userId uint, ticketId uint, updateData map[string]interface{}) (*Ticket, error)
+	GetMany(ctx context.Context) ([]*Ticket, error) // when getting authentication have it as
+	//	GetMany(ctx context.Context, userId uint) ([]*Ticket, error)
+
+	GetOne(ctx context.Context, ticketId uint) (*Ticket, error)
+	CreateOne(ctx context.Context, ticket *Ticket) (*Ticket, error)
+	UpdateOne(ctx context.Context, ticketId uint, updateData map[string]interface{}) (*Ticket, error)
 }
 
 type ValidateTicket struct {
 	TicketID uint `json:"ticketId"`
-	OwnerId  uint `json:"ownerId"`
+	// OwnerId  uint `json:"ownerId"`
 }
