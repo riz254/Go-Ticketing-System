@@ -8,7 +8,6 @@ import (
 	"github.com/riz254/Go-Ticketing-System.git/config"
 	"github.com/riz254/Go-Ticketing-System.git/db"
 	"github.com/riz254/Go-Ticketing-System.git/handlers"
-	"github.com/riz254/Go-Ticketing-System.git/middlewares"
 	"github.com/riz254/Go-Ticketing-System.git/repositories"
 	"github.com/riz254/Go-Ticketing-System.git/services"
 )
@@ -58,12 +57,12 @@ func main() {
 	// Public tickets
 	handlers.NewTicketHandler(publicEventRoutes.Group("/ticket"), ticketRepository)
 
-	// Private routes
-	privateRoutes := server.Use(middlewares.AuthProtected(db))
+	// // Private routes
+	// privateRoutes := server.Use(middlewares.AuthProtected(db))
 
-	// Private event routes
-	privateEventRoutes := privateRoutes.Group("/event")
-	handlers.NewTicketHandler(privateEventRoutes.Group("/ticket"), ticketRepository)
+	// // // Private event routes
+	// // privateEventRoutes := privateRoutes.Group("/event")
+	// // handlers.NewTicketHandler(privateEventRoutes.Group("/ticket"), ticketRepository)
 
 	// Log and listen on port
 	fmt.Println("Listening on port 3000...")
