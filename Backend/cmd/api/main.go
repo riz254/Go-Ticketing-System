@@ -52,7 +52,11 @@ func main() {
 
 	// Public event routes
 	publicEventRoutes := server.Group("/event")
+
 	handlers.NewEventHandler(publicEventRoutes, eventRepository)
+
+	// Public tickets
+	handlers.NewTicketHandler(publicEventRoutes.Group("/ticket"), ticketRepository)
 
 	// Private routes
 	privateRoutes := server.Use(middlewares.AuthProtected(db))
