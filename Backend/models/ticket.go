@@ -8,12 +8,14 @@ import (
 type Ticket struct {
 	ID        uint      `json:"id" gorm:"primaryKey"` // Ensure autoIncrement is set
 	EventID   uint      `json:"eventId"`
-	UserID    uint      `json:"userId" gorm:"foreignkey:UserID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Event     Event     `json:"event" gorm:"foreignkey:EventID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Entered   bool      `json:"entered" default:"false"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
+
+// when authenticating remember to add this userId in the struct
+// UserID    uint      `json:"userId" gorm:"foreignkey:UserID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
 type TicketRepository interface {
 	GetMany(ctx context.Context) ([]*Ticket, error) // when getting authentication have it as
