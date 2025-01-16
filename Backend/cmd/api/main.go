@@ -60,9 +60,9 @@ func main() {
 	// // Private routes
 	// privateRoutes := server.Use(middlewares.AuthProtected(db))
 
-	// // // Private event routes
-	// // privateEventRoutes := privateRoutes.Group("/event")
-	// // handlers.NewTicketHandler(privateEventRoutes.Group("/ticket"), ticketRepository)
+	// // Private event routes
+	// privateEventRoutes := privateRoutes.Group("/event")
+	// handlers.NewTicketHandler(privateEventRoutes.Group("/ticket"), ticketRepository)
 
 	// Log and listen on port
 	fmt.Println("Listening on port 3000...")

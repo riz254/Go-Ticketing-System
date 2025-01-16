@@ -20,7 +20,7 @@ type TicketRepository interface {
 	//	GetMany(ctx context.Context, userId uint) ([]*Ticket, error)
 
 	GetOne(ctx context.Context, ticketId uint) (*Ticket, error)
-	CreateOne(ctx context.Context, ticket *Ticket) (*Ticket, error)
+	CreateOne(ctx context.Context, ticketId *Ticket) (*Ticket, error)
 	UpdateOne(ctx context.Context, ticketId uint, updateData map[string]interface{}) (*Ticket, error)
 }
 
