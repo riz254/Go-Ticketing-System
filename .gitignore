@@ -1,0 +1,42 @@
+# Binaries and build artifacts
+bin/
+*.out
+*.exe
+*.test
+
+# Dependencies
+/vendor/
+
+# Logs and debug files
+*.log
+
+# Environment variables and secrets
+.env
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# Docker-related files (if generated at runtime)
+docker-compose.override.yml
+
+# Temporary or system-specific files
+.DS_Store
+Thumbs.db
+
+# Air configuration
+.air.toml
+
+# Build tools
+Makefile
+
+# Go module files (kept unless auto-generated)
+*.mod.*
+*.sum.*
+
+# Generated files from commands (pre_cmd.txt/post_cmd.txt, if outputs are generated)
+pre_cmd.txt
+post_cmd.txt
