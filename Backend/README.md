@@ -1,6 +1,6 @@
-# Go
+# ibambe
 
-Events Ticket booking system built with Go and Go fiber
+An Events Ticket booking system built with Go and Go fiber
 
 # Features
 
